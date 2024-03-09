@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ATM </h1>
+    <div id="cardCreation">
+      <h2>Create a Card</h2>
+      <input type="password" id="password" placeholder="Enter password">
+      <button id="createCardButton">Create Card</button>
+    </div>
+
+    <div id="operations" style="display: none;">
+      <div id="balance">Balance: $0</div>
+      
+      
+      <br><br>
+      <input type="number" id="depositAmount" placeholder="Enter deposit amount">
+      <button id="depositButton">Deposit</button>
+      <br><br>
+      <input type="number" id="withdrawAmount" placeholder="Enter withdraw amount">
+      <button id="withdrawButton">Withdraw</button>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    let card;
+    let balance = 0;
+
+    const cardCreationDiv = document.getElementById('cardCreation');
+    const passwordInput = document.getElementById('password');
+    const createCardButton = document.getElementById('createCardButton');
+    const operationsDiv = document.getElementById('operations');
+    const balanceDisplay = document.getElementById('balance');
+    const checkBalanceButton = document.getElementById('checkBalanceButton');
+    const depositAmountInput = document.getElementById('depositAmount');
+    const depositButton = document.getElementById('depositButton');
+    const withdrawAmountInput = document.getElementById('withdrawAmount');
+    const withdrawButton = document.getElementById('withdrawButton');
+    const messageDisplay = document.getElementById('message');
+
+    createCardButton.addEventListener('click', function() {
+      const password = passwordInput.value.trim();
+      if (password !== '' && password.length == 4) {
+        card = new Card(password, 0);
+        cardCreationDiv.style.display = 'none';
+        operationsDiv.style.display = 'block';
+        balanceDisplay.textContent = `Balance: $${balance}`;
+      } else {
+        alert('Please123 enter a password.');
+      }
+    });
+
+    depositButton.addEventListener('click', function() {
+      const depositAmount = parseFloat(depositAmountInput.value);
+      if (!isNaN(depositAmount) && depositAmount > 0) {
+        balance += depositAmount;
+        balanceDisplay.textContent = `Balance: $${balance}`;
+        messageDisplay.textContent = `Deposited $${depositAmount} successfully.`;
+        depositAmountInput.value = '';
+      } else {
+        messageDisplay.textContent = 'Invalid deposit amount.';
+      }
+    });
+
+    withdrawButton.addEventListener('click', function() {
+      const withdrawAmount = parseFloat(withdrawAmountInput.value);
+      if (!isNaN(withdrawAmount) && withdrawAmount > 0 && withdrawAmount <= balance) {
+        balance -= withdrawAmount;
+        balanceDisplay.textContent = `Balance: $${balance}`;
+        messageDisplay.textContent = `Withdrawn $${withdrawAmount} successfully.`;
+        withdrawAmountInput.value = '';
+      } else {
+        messageDisplay.textContent = 'Invalid withdraw amount or insufficient balance.';
+      }
+    });
+
+    function Card(password, balance) {
+      this.password = password;
+      this.balance = balance;
+    }
+  </script>
+</body>
+</html>
